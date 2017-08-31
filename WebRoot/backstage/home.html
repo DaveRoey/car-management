@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>首页</title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+</head>
+<body>
+<!--面包导航-->
+<div class="tpl-content-page-title">
+    CBD 管理系统
+</div>
+<ol class="am-breadcrumb">
+    <li><a href="#" class="am-icon-home">首页</a></li>
+    <li><a href="#">提示</a></li>
+    <li class="am-active">内容</li>
+</ol>
+<div class="tpl-content-scope">
+    <div class="note note-info">
+        <h3>CBD 管理系统
+            <span class="close" data-close="note"></span>
+        </h3>
+        <p> 欢迎使用本系统，如发现系统异常请及时联系管理员。请遵守公司相关约定、勿将重要信息透露！</p>
+        <p><span class="label label-danger">  提示:</span> 数据无价，请谨慎操作！
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="am-u-lg-3 am-u-md-6 am-u-sm-12">
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="am-icon-comments-o"></i>
+            </div>
+            <div class="details">
+                <div id="letterCount" class="number"> </div>
+                <div class="desc"> 待审核包租婆</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="am-u-lg-3 am-u-md-6 am-u-sm-12">
+        <div class="dashboard-stat red">
+            <div class="visual">
+                <i class="am-icon-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div id="carCount" class="number"> </div>
+                <div class="desc"> 待审核车位</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="am-u-lg-3 am-u-md-6 am-u-sm-12">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="am-icon-apple"></i>
+            </div>
+            <div class="details">
+                <div id="letterAuditCount" class="number"> </div>
+                <div class="desc"> 待审核包租婆投诉</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="am-u-lg-3 am-u-md-6 am-u-sm-12">
+        <div class="dashboard-stat purple">
+            <div class="visual">
+                <i class="am-icon-android"></i>
+            </div>
+            <div class="details">
+                <div id="renterAuditCount" class="number"> </div>
+                <div class="desc"> 待审核抢租客投诉</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        getLetterCount();
+        /*待审核包租婆*/
+        getCarCount();
+        /*待审核车辆*/
+        getAuditLetter();
+        /*待审核包租婆投诉*/
+        getAuditRenter();
+        /*待审核强租客投诉*/
+    });
+    /*待审核包租婆*/
+    function getLetterCount() {
+        $.get("../LetterOfManager/getLetterCount.do", function (data) {
+            $("#letterCount").text(data);
+        });
+    }
+
+    /*待审核车辆*/
+    function getCarCount() {
+        $.get("../LetterOfManager/getCarCount.do", function (data) {
+            $("#carCount").text(data);
+        });
+    }
+
+    /*待审核包租婆投诉*/
+    function getAuditLetter() {
+        $.get("../tousuguanli/getLetterCount.do", function (data) {
+            $("#letterAuditCount").text(data);
+        });
+    }
+
+    /*待审核强租客投诉*/
+    function getAuditRenter() {
+        $.get("../tousuguanli/getLetterCount.do", function (data) {
+            $("#renterAuditCount").text(data);
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+.*{
+	margin: 0px;
+	padding: 0px;
+}
+.showPart{
+	
+}
+
+
+
+.password{
+	position: relative;
+  	top: -24px;
+  	right:-84%;
+}
+
+
+.glyphicon-remove-circle{
+	color:red;
+	position: relative;
+	top:-20px;
+	right: -97%;
+}
+.glyphicon-ok-circle{
+	color:green;
+	position: relative;
+	top:-20px;
+	right: -97%;
+}

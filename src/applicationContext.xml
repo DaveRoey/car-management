@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd 
+    http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--启用自动扫描 -->
+    <context:component-scan base-package="com"/>
+    <aop:aspectj-autoproxy/>
+
+    <!-- 配置数据源 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+    <bean id="dataSource"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+    </bean>
+    <!-- 配置 JPA 的 EntityManagerFactory  -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/><!-- 添加数据源 -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="packagesToScan" value="com.pojo"/>
+        <!-- hibernate 配置 -->
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 配置事务 纯事物     jpa事物 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"></property>
+    </bean>
+
+    <!-- 配置支持基于注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 配置 SpringData -->
+    <jpa:repositories base-package="com.dao"
+                      entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+
+    <!-- mybatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:SqlMapConfig.xml"/>
+    </bean>
+    <!-- mappers -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mapper"></property>
+    </bean>
+
+    <!-- 测试调度器配置 -->
+    <!-- .配置作业类 -->
+    <bean name="quartz1" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.util.LogRemove"/>
+        <!-- 可以传递参数 -->
+        <property name="jobDataMap">
+            <map>
+                <entry key="testName" value="zhangsan"/>
+            </map>
+        </property>
+    </bean>
+
+    <!--触发方式 -->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="quartz1"/>
+        <property name="cronExpression" value="0 0 23 L * ?"/>
+    </bean>
+
+
+    <!-- 配置调度工厂 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

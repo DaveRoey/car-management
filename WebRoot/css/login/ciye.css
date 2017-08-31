@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Exo 2'), local('Exo2-Regular'), url(https://fonts.gstatic.com/s/exo2/v3/N9KSa305HxlY5zk6XisHxw.ttf) format('truetype');
+}

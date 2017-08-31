@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mapper.ManagerMapper">
+
+    <!--删除-->
+    <delete id="deleteManager" parameterType="int">
+        DELETE FROM manager WHERE managerId=#{id}
+    </delete>
+
+    <!--修改-->
+    <update id="updateManager" parameterType="com.pojo.Manage">
+        UPDATE manager SET password=#{password},role=#{role} WHERE managerId=#{managerId}
+    </update>
+</mapper>
